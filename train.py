@@ -19,6 +19,7 @@ from lightning import Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor
 from lightning.pytorch.loggers.wandb import WandbLogger
 import matplotlib.pyplot as plt
+import wandb
 
 # -------------------------------- my modules ------------------------------ #
 from src.dataset import TinyImageNetDatasetModule
@@ -26,7 +27,7 @@ from src.network import SimpleClassifier
 import src.config as cfg
 
 torch.set_float32_matmul_precision("medium")
-
+wandb.login(key="")
 
 # --------------------------------------------------------------------------- #
 #                   1.  SINGLE-RUN HELPER (train + validate)                  #
