@@ -12,7 +12,7 @@ from lightning.pytorch import LightningModule
 from lightning.pytorch.loggers.wandb import WandbLogger
 from termcolor import colored
 
-from src.metric import MyAccuracy          # 필요하다면 MyF1Score 도 import
+from src.metric import MyAccuracy    
 import src.config as cfg
 from src.util import show_setting
 
@@ -101,7 +101,6 @@ class MyNetwork(AlexNet):
             nn.Linear(1024, num_classes),
         )
 
-    # 필요 시 forward 재정의 (여기선 base 와 동일)
     def forward(self, x: torch.Tensor) -> torch.Tensor:  # noqa: D401
         x = self.features(x)
         x = self.avgpool(x)
@@ -141,7 +140,7 @@ class SimpleClassifier(LightningModule):
         # ------------------------ loss / metrics -------------------- #
         self.loss_fn = nn.CrossEntropyLoss()
         self.accuracy = MyAccuracy()
-        # self.f1 = MyF1Score(num_classes=num_classes)  # 필요 시 활성화
+        # self.f1 = MyF1Score(num_classes=num_classes) 
 
         # ------------------------ hparams save ---------------------- #
         self.save_hyperparameters(

@@ -1,26 +1,37 @@
-# Python packages
 from termcolor import colored
 from tqdm import tqdm
 import os
 import tarfile
 import wget
 
-# PyTorch & Pytorch Lightning
 from lightning.pytorch import LightningDataModule
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
+from torchvision.transforms import RandAugment   # ★ NEW
 
-# Custom packages
+
 import src.config as cfg
 
 
 class TinyImageNetDatasetModule(LightningDataModule):
     __DATASET_NAME__ = 'tiny-imagenet-200'
 
-    def __init__(self, batch_size: int = cfg.BATCH_SIZE):
+    # def __init__(self, batch_size: int = cfg.BATCH_SIZE):
+    #     super().__init__()
+    #     self.batch_size = batch_size
+
+    def __init__(
+        self,
+        batch_size: int = cfg.BATCH_SIZE,
+        aug_n: int = cfg.RAND_AUG_N,
+        aug_m: int = cfg.RAND_AUG_M,
+    ):
         super().__init__()
         self.batch_size = batch_size
+        self.aug_n = aug_n        # 저장
+        self.aug_m = aug_m
+        
 
     def prepare_data(self):
         '''called only once and on 1 GPU'''
@@ -41,6 +52,7 @@ class TinyImageNetDatasetModule(LightningDataModule):
 
     def train_dataloader(self):
         tf_train = transforms.Compose([
+            RandAugment(num_ops=self.aug_n, magnitude=self.aug_m),
             transforms.RandomRotation(cfg.IMAGE_ROTATION),
             transforms.RandomHorizontalFlip(cfg.IMAGE_FLIP_PROB),
             transforms.RandomCrop(cfg.IMAGE_NUM_CROPS, padding=cfg.IMAGE_PAD_CROPS),

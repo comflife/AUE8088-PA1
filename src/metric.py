@@ -10,13 +10,7 @@ from torchmetrics import Metric
 #                           1.  F-1  SCORE  (ONE-VS-REST)                     #
 # --------------------------------------------------------------------------- #
 class MyF1Score(Metric):
-    """
-    Per-class (one-vs-rest) F-1 score.
 
-    • 각 클래스를 'positive', 나머지를 'negative'로 간주해 TP/FP/FN을 집계합니다.
-    • ``compute()`` 는 (num_classes,) 모양의 tensor 를 반환합니다. 필요하면
-      ``macro_f1 = MyF1Score(...).compute().mean()`` 과 같이 평균을 취해 사용하세요.
-    """
 
     def __init__(
         self,
@@ -56,14 +50,7 @@ class MyF1Score(Metric):
     #                              UPDATE                                   #
     # --------------------------------------------------------------------- #
     def update(self, preds: Tensor, target: Tensor) -> None:  # noqa: D401
-        """
-        Update internal TP/FP/FN counters.
 
-        Parameters
-        ----------
-        preds   : (B, C) 텐서. raw logit, 확률 등 무엇이든 OK ― argmax 만 사용합니다.
-        target  : (B,) 텐서. 정답 클래스 인덱스.
-        """
         if preds.ndim != 2:
             raise ValueError(
                 f"`preds` must have shape (batch, num_classes); got {preds.shape}"
@@ -120,12 +107,7 @@ class MyAccuracy(Metric):
     #                                UPDATE                                 #
     # --------------------------------------------------------------------- #
     def update(self, preds: Tensor, target: Tensor) -> None:
-        """
-        Args
-        ----
-        preds   : (B, C) 텐서 – 모델 출력.
-        target  : (B,)   텐서 – 정답 레이블.
-        """
+
         if preds.ndim != 2:
             raise ValueError(f"`preds` must be 2-D (B, C); got {preds.shape}")
         if target.ndim != 1:
